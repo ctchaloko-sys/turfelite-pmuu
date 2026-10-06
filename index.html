@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TurfElite | Pronostics Hippiques Premium & Analyses PMU Officielles</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Dynamic Animated Particles Background Canvas -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Navigation Header Bar -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div style="display:flex; align-items:center; gap:0.75rem;">
+                <!-- Theme Mode Toggle Button (Top Left) -->
+                <button id="theme-toggle-btn" class="theme-toggle-btn" onclick="toggleThemeMode()" title="Changer le Mode (Sombre / Clair)">
+                    <i class="fa-solid fa-moon"></i> <span class="theme-mode-text">Mode Sombre</span>
+                </button>
+                <a href="#" class="logo" onclick="switchView('home')">
+                    <div class="logo-icon-wrap">
+                        <i class="fa-solid fa-horse-head"></i>
+                    </div>
+                    <span>Turf<span class="gold-gradient-text">Elite</span><span class="logo-badge">PRO</span></span>
+                </a>
+            </div>
+
+            <button class="mobile-toggle" onclick="toggleMobileNav()">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <nav class="nav-menu" id="nav-menu">
+                <a href="#accueil" class="nav-link active" onclick="switchView('home')"><i class="fa-solid fa-house"></i> Accueil</a>
+                <a href="#pronostics" class="nav-link" onclick="switchView('predictions')"><i class="fa-solid fa-ticket"></i> Pronostics VIP</a>
+                <a href="#resultats" class="nav-link" onclick="switchView('results')"><i class="fa-solid fa-trophy"></i> Résultats Officiels</a>
+                <a href="#medias" class="nav-link" onclick="switchView('media')"><i class="fa-solid fa-photo-film"></i> Replays & Analyses</a>
+                <a href="#assistance" class="nav-link" onclick="switchView('faq')"><i class="fa-solid fa-headset"></i> Assistance FAQ</a>
+                <a href="#admin" id="nav-admin-link" class="nav-link text-gold hidden" onclick="switchView('admin-dashboard')"><i class="fa-solid fa-user-gear"></i> Back-Office Admin</a>
+            </nav>
+
+            <div class="nav-actions">
+                <div id="nav-guest-actions" style="display:flex; gap:0.5rem;">
+                    <button class="btn btn-login-stylish btn-sm" onclick="showAuthModal('login')">
+                        <i class="fa-solid fa-right-to-bracket"></i> Connexion
+                    </button>
+                    <button class="btn btn-signup-stylish btn-sm" onclick="showAuthModal('register')">
+                        <i class="fa-solid fa-user-plus"></i> S'inscrire
+                    </button>
+                </div>
+
+                <div id="nav-user-actions" class="hidden" style="display:flex; gap:0.5rem; align-items:center;">
+                    <div class="user-pill-stylish" onclick="switchView('member-dashboard')">
+                        <div class="user-avatar-gold" id="nav-user-avatar">A</div>
+                        <span id="nav-user-name" style="font-size:0.88rem; font-weight:800; color:var(--text-main);">Membre</span>
+                    </div>
+                    <button class="btn btn-logout-stylish btn-sm" onclick="logout()" title="Déconnexion">
+                        <i class="fa-solid fa-power-off"></i> Déconnexion
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Announcement Ticker Banner -->
+    <div style="background:rgba(245,158,11,0.1); border-bottom:1px solid rgba(245,158,11,0.2); padding:0.5rem 1rem; font-size:0.88rem; text-align:center;">
+        <span class="gold-gradient-text" style="font-weight:800;" id="announcement-banner-text">🏆 QUINTÉ+ VINCENNES : Notre Tuyau VIP est disponible ! Consultez la synthèse du jour.</span>
+    </div>
+
+    <!-- MAIN VIEWS WRAPPER -->
+    <main class="main-wrapper">
+
+        <!-- ==================== 1. HOME VIEW ==================== -->
+        <section id="view-home" class="page-view active">
+            <!-- Hero Banner -->
+            <div class="hero-banner">
+                <div class="hero-content">
+                    <span class="badge badge-gold"><i class="fa-solid fa-crown"></i> Plateforme d'Information & Analyses PMU N°1</span>
+                    <h1 class="hero-title">L'Expertise Hippique de Haute Précision pour vos <span class="gold-gradient-text">Pronostics Quinté+</span>.</h1>
+                    <p class="hero-description">
+                        Accédez quotidiennement aux meilleures sélections, Tuyaux VIP, Tokards et synthèses élaborés par nos pronostiqueurs professionnels. Suivez les arrivées officielles en temps réel sans spéculation.
+                    </p>
+                    <div class="hero-actions">
+                        <button class="btn btn-gold btn-lg" onclick="handleHeroQuinteClick()">
+                            <i class="fa-solid fa-ticket"></i> Quinté Quarté PMU et Trio
+                        </button>
+                        <button class="btn btn-emerald btn-lg" onclick="showVipRequestModal()">
+                            <i class="fa-brands fa-whatsapp"></i> Demander un Accès VIP (WhatsApp)
+                        </button>
+                    </div>
+                </div>
+
+                <div class="hero-stats-row">
+                    <div class="hero-stat-card">
+                        <div class="stat-icon-wrap stat-icon-gold"><i class="fa-solid fa-trophy"></i></div>
+                        <div>
+                            <div class="stat-number gold-gradient-text">88.4%</div>
+                            <div class="stat-text">Taux de Réussite Tiercé</div>
+                        </div>
+                    </div>
+                    <div class="hero-stat-card">
+                        <div class="stat-icon-wrap stat-icon-emerald"><i class="fa-solid fa-horse-head"></i></div>
+                        <div>
+                            <div class="stat-number emerald-gradient-text">100%</div>
+                            <div class="stat-text">Résultats Officiels Vérifiés</div>
+                        </div>
+                    </div>
+                    <div class="hero-stat-card">
+                        <div class="stat-icon-wrap stat-icon-gold"><i class="fa-solid fa-users"></i></div>
+                        <div>
+                            <div class="stat-number text-gold">45,000+</div>
+                            <div class="stat-text">Passionnés Abonnés</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upcoming Races Grid Section -->
+            <div class="section-header">
+                <div class="section-title-wrap">
+                    <h2><i class="fa-solid fa-hourglass-start text-gold"></i> Courses à Venir & Compte à Rebours Live</h2>
+                    <p>Accès direct aux pronostics pour les départs imminents des réunions PMU.</p>
+                </div>
+            </div>
+
+            <div class="races-grid" id="home-upcoming-races">
+                <!-- Populated dynamically via script.js -->
+            </div>
+
+            <!-- SectionPourquoi Nous ? (Why Choose Us) -->
+            <div class="section-container" style="margin-bottom: 3rem;">
+                <div class="section-title text-center">
+                    <span class="section-badge">NOTRE EXPERTISE</span>
+                    <h2>Pourquoi Choisir TurfElite-PMU ?</h2>
+                    <p>Une plateforme moderne d'analyse hippique à la pointe de la technologie.</p>
+                </div>
+                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:1.5rem; margin-top:2rem;">
+                    <div class="glass-panel text-center" style="padding:1.5rem;">
+                        <i class="fa-solid fa-brain text-gold" style="font-size:2.5rem; margin-bottom:1rem;"></i>
+                        <h3 style="font-size:1.15rem; font-weight:700; margin-bottom:0.5rem;" class="gold-gradient-text">ANALYSE COMBINÉE IA</h3>
+                        <p class="text-muted" style="font-size:0.88rem;">Nos algorithmes croisent l'historique des jockeys, la météo et la musique des chevaux pour des prédictions ultra-précises.</p>
+                    </div>
+                    <div class="glass-panel text-center" style="padding:1.5rem;">
+                        <i class="fa-solid fa-user-shield text-emerald" style="font-size:2.5rem; margin-bottom:1rem;"></i>
+                        <h3 style="font-size:1.15rem; font-weight:700; margin-bottom:0.5rem;" class="emerald-gradient-text">ACCÈS SÉCURISÉ & PRIVÉ</h3>
+                        <p class="text-muted" style="font-size:0.88rem;">Pronostics Quinté+, Quarté et Tiercé réservés aux membres VIP via codes d'accès personnalisés.</p>
+                    </div>
+                    <div class="glass-panel text-center" style="padding:1.5rem;">
+                        <i class="fa-solid fa-mobile-screen-button text-gold" style="font-size:2.5rem; margin-bottom:1rem;"></i>
+                        <h3 style="font-size:1.15rem; font-weight:700; margin-bottom:0.5rem;" class="gold-gradient-text">100% MOBILE & ERGONOMIQUE</h3>
+                        <p class="text-muted" style="font-size:0.88rem;">Interface fluide, réactive et optimisée pour smartphone, utilisable partout et à tout moment.</p>
+                    </div>
+                    <div class="glass-panel text-center" style="padding:1.5rem;">
+                        <i class="fa-solid fa-bolt text-emerald" style="font-size:2.5rem; margin-bottom:1rem;"></i>
+                        <h3 style="font-size:1.15rem; font-weight:700; margin-bottom:0.5rem;" class="emerald-gradient-text">ÈRE NUMÉRIQUE & RAPIDITÉ</h3>
+                        <p class="text-muted" style="font-size:0.88rem;">Mises à jour instantanées des départs, cotes et résultats officiels en temps réel sans latence.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Software Banner Announcement -->
+            <div class="glass-panel glass-panel-gold" style="margin-bottom: 3rem; background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(2, 44, 34, 0.95)); border: 1px solid var(--gold-bright);">
+                <div style="display:flex; align-items:center; gap:1.5rem; flex-wrap:wrap;">
+                    <div style="width:70px; height:70px; border-radius:50%; background:rgba(245,158,11,0.2); border:1px solid var(--gold-bright); display:flex; align-items:center; justify-content:center; font-size:2rem; color:var(--gold-bright); flex-shrink:0;">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div style="flex:1; min-width:260px;">
+                        <span class="badge badge-gold" style="margin-bottom:0.4rem;"><i class="fa-solid fa-bolt"></i> ANALYSE PAR INTELLIGENCE ARTIFICIELLE</span>
+                        <h3 style="font-size:1.35rem; font-weight:800; margin-bottom:0.4rem;" class="gold-gradient-text">Logiciel & IA de Pronostics Hippiques 100% Fiable</h3>
+                        <p style="font-size:0.92rem; color:var(--text-muted); line-height:1.6;">
+                            Consulter les pronostics fiables avec nos analyses combinées avec l'IA qui donne 100% de score. Notre algorithme croise la météo, la forme des jockeys et les historiques de courses pour décrocher les gros jackpots PMU.
+                        </p>
+                    </div>
+                    <button class="btn btn-gold" onclick="showVipRequestModal()"><i class="fa-solid fa-crown"></i> Découvrir l'IA VIP</button>
+                </div>
+            </div>
+
+            <!-- Featured Quinté+ Prediction Ticket Coupon -->
+            <div class="section-header">
+                <div class="section-title-wrap">
+                    <h2><i class="fa-solid fa-star text-gold"></i> Pronostic Vedette du Jour (Ticket VIP)</h2>
+                    <p>Synthèse complète, favori, outsider, tokard et combinaisons prêtes à jouer.</p>
+                </div>
+            </div>
+
+            <div id="home-featured-ticket">
+                <!-- Populated dynamically via script.js -->
+            </div>
+
+            <!-- User Reviews / Testimonials Section -->
+            <div class="section-header" style="margin-top: 3rem;">
+                <div class="section-title-wrap">
+                    <h2><i class="fa-solid fa-comments text-gold"></i> Avis & Témoignages de nos Abonnés VIP</h2>
+                    <p>Découvrez ce que disent les gagnants TurfElite à travers le monde.</p>
+                </div>
+            </div>
+
+            <div class="races-grid" style="margin-bottom: 2rem;">
+                <div class="glass-panel" style="position:relative;">
+                    <div style="display:flex; align-items:center; gap:0.8rem; margin-bottom:0.8rem;">
+                        <div style="width:42px; height:42px; border-radius:50%; background:#d97706; color:#000; font-weight:800; display:flex; align-items:center; justify-content:center;">SD</div>
+                        <div>
+                            <h4 style="font-size:0.95rem; font-weight:800; margin:0;">Seydou D.</h4>
+                            <span style="font-size:0.75rem; color:var(--text-muted);"><i class="fa-solid fa-location-dot text-gold"></i> Dakar, Sénégal</span>
+                        </div>
+                    </div>
+                    <div style="color:var(--gold-bright); font-size:0.85rem; margin-bottom:0.5rem;">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.6;">
+                        "Grâce aux combinaisons Quinté et Trio générées par l'IA de TurfElite, j'ai rentré le désordre 3 fois ce mois-ci. Les pronostics sont chirurgicaux !"
+                    </p>
+                </div>
+
+                <div class="glass-panel" style="position:relative;">
+                    <div style="display:flex; align-items:center; gap:0.8rem; margin-bottom:0.8rem;">
+                        <div style="width:42px; height:42px; border-radius:50%; background:#059669; color:#fff; font-weight:800; display:flex; align-items:center; justify-content:center;">IK</div>
+                        <div>
+                            <h4 style="font-size:0.95rem; font-weight:800; margin:0;">Ibrahim K.</h4>
+                            <span style="font-size:0.75rem; color:var(--text-muted);"><i class="fa-solid fa-location-dot text-emerald"></i> Ouagadougou, Burkina Faso</span>
+                        </div>
+                    </div>
+                    <div style="color:var(--gold-bright); font-size:0.85rem; margin-bottom:0.5rem;">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.6;">
+                        "Service client WhatsApp très réactif et rapide pour activer mon code VIP. Les analyses sur le départ du jour et les arrivées sont 100% exactes."
+                    </p>
+                </div>
+
+                <div class="glass-panel" style="position:relative;">
+                    <div style="display:flex; align-items:center; gap:0.8rem; margin-bottom:0.8rem;">
+                        <div style="width:42px; height:42px; border-radius:50%; background:#3b82f6; color:#fff; font-weight:800; display:flex; align-items:center; justify-content:center;">AM</div>
+                        <div>
+                            <h4 style="font-size:0.95rem; font-weight:800; margin:0;">Amadou M.</h4>
+                            <span style="font-size:0.75rem; color:var(--text-muted);"><i class="fa-solid fa-location-dot text-gold"></i> Abidjan, Côte d'Ivoire</span>
+                        </div>
+                    </div>
+                    <div style="color:var(--gold-bright); font-size:0.85rem; margin-bottom:0.5rem;">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.6;">
+                        "La meilleure plateforme hippique que j'ai utilisée. Le Quinté Quarté Trio et la sélection des tocards sont vraiment fiables."
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 2. PREDICTIONS PAGE ==================== -->
+        <section id="view-predictions" class="page-view">
+            <div class="section-header">
+                <div class="section-title-wrap">
+                    <h2><i class="fa-solid fa-ticket text-gold"></i> Tous les Pronostics & Coupons du Jour</h2>
+                    <p>Retrouvez l'ensemble des courses analysées par nos spécialistes pour Tiercé, Quarté, Quinté+ et Multi.</p>
+                </div>
+            </div>
+
+            <div id="predictions-list-container">
+                <!-- Populated dynamically via script.js -->
+            </div>
+        </section>
+
+        <!-- ==================== 3. OFFICIAL RESULTS PAGE ==================== -->
+        <section id="view-results" class="page-view">
+            <div class="section-header">
+                <div class="section-title-wrap">
+                    <h2><i class="fa-solid fa-trophy text-gold"></i> Arrivées & Résultats Officiels PMU</h2>
+                    <p>Vérifiez les ordres d'arrivée validés de manière certifiée. Aucun résultat n'est généré artificiellement.</p>
+                </div>
+            </div>
+
+            <div class="results-filter-bar">
+                <div class="form-group" style="margin-bottom:0; flex:1; min-width:200px;">
+                    <label style="font-size:0.78rem;">Filtrer par Hippodrome :</label>
+                    <select id="results-hippodrome-filter" class="form-control" onchange="renderResultsPage()">
+                        <option value="ALL">Tous les hippodromes</option>
+                        <option value="Vincennes">Vincennes</option>
+                        <option value="Longchamp">Longchamp</option>
+                        <option value="Auteuil">Auteuil</option>
+                        <option value="Deauville">Deauville</option>
+                    </select>
+                </div>
+
+                <div class="form-group" style="margin-bottom:0; flex:1; min-width:200px;">
+                    <label style="font-size:0.78rem;">Filtrer par Discipline :</label>
+                    <select id="results-discipline-filter" class="form-control" onchange="renderResultsPage()">
+                        <option value="ALL">Toutes les disciplines</option>
+                        <option value="Attelé">Attelé</option>
+                        <option value="Galop">Galop</option>
+                        <option value="Haies">Haies / Obstacle</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="results-table-container">
+                <table class="official-table">
+                    <thead>
+                        <tr>
+                            <th>Course</th>
+                            <th>Prix & Programme</th>
+                            <th>Hippodrome</th>
+                            <th>Discipline</th>
+                            <th>Ordre d'Arrivée Officiel</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="results-table-tbody">
+                        <!-- Populated dynamically via script.js -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ==================== 4. MEDIA & REPLAYS PAGE ==================== -->
+        <section id="view-media" class="page-view">
+            <div class="section-header">
+                <div class="section-title-wrap">
+                    <h2><i class="fa-solid fa-photo-film text-gold"></i> Médiathèque, Replays & Analyses Vidéo</h2>
+                    <p>Revivez les grands prix hippiques et découvrez les coulisses des entraînements de légende.</p>
+                </div>
+            </div>
+
+            <div class="media-grid" id="media-gallery-grid">
+                <!-- Populated dynamically via script.js -->
+            </div>
+        </section>
+
+        <!-- ==================== 5. FAQ & ASSISTANCE PAGE ==================== -->
+        <section id="view-faq" class="page-view">
+            <div class="section-header">
+                <div class="section-title-wrap">
+                    <h2><i class="fa-solid fa-headset text-gold"></i> Centre d'Assistance & Foire aux Questions</h2>
+                    <p>Découvrez le fonctionnement de la plateforme TurfElite et le cadre légal du jeu responsable.</p>
+                </div>
+            </div>
+
+            <div class="faq-accordion" style="margin-bottom:3rem;">
+                <div class="faq-item">
+                    <div class="faq-header" onclick="toggleFaq(this)">
+                        <span><i class="fa-solid fa-shield-halved text-gold"></i> Est-il possible de parier directement de l'argent sur TurfElite ?</span>
+                        <i class="fa-solid fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-body">
+                        <p>Non, absolument pas. TurfElite est exclusivement une plateforme média et d'information hippique. Aucun système de pari, de dépôt ou de retrait n'est disponible. Nos pronostics sont fournis à titre d'analyse pure.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-header" onclick="toggleFaq(this)">
+                        <span><i class="fa-solid fa-key text-gold"></i> Comment déverrouiller l'accès VIP aux numéros du Quinté+ ?</span>
+                        <i class="fa-solid fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-body">
+                        <p>Après votre inscription ou connexion, souscrivez à l'un de nos abonnements (Hebdomadaire, Mensuel ou Annuel) via WhatsApp pour recevoir votre Code VIP personnel ou être activé directement.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-header" onclick="toggleFaq(this)">
+                        <span><i class="fa-solid fa-clock-rotate-left text-gold"></i> À quelle heure sont publiés les pronostics du Quinté+ ?</span>
+                        <i class="fa-solid fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-body">
+                        <p>Les pronostics et tickets synthétiques sont généralement publiés au plus tard la veille à 20h00, puis mis à jour en direct 1 heure avant le départ pour intégrer les éventuels non-partants et la météo de la piste.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-header" onclick="toggleFaq(this)">
+                        <span><i class="fa-solid fa-phone text-gold"></i> Comment contacter l'assistance hippique par WhatsApp ?</span>
+                        <i class="fa-solid fa-chevron-down faq-icon"></i>
+                    </div>
+                    <div class="faq-body">
+                        <p>Utilisez le bouton vert WhatsApp flottant disponible en bas à droite de votre écran pour être mis en relation immédiate avec nos conseillers VIP (+226 46 55 35 56).</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Email Contact Form -->
+            <div class="glass-panel" style="max-width:850px; margin:0 auto;">
+                <h3 style="font-size:1.3rem; font-weight:800; margin-bottom:0.5rem;" class="gold-gradient-text"><i class="fa-solid fa-envelope"></i> Nous Contacter par Email</h3>
+                <p class="text-muted" style="font-size:0.88rem; margin-bottom:1.5rem;">Vous avez une question, une demande ou une préoccupation ? Envoyez-nous un message directement à notre email officiel : <strong class="text-gold" id="contact-email-display">emmabrn888@gmail.com</strong></p>
+
+                <form onsubmit="handleContactEmailSubmit(event)">
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem;">
+                        <div class="form-group">
+                            <label>Votre Nom complet * :</label>
+                            <input type="text" id="contact-name" class="form-control" placeholder="Ex: Jean Dupont" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Votre Adresse Email * :</label>
+                            <input type="email" id="contact-email" class="form-control" placeholder="jean@example.com" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Sujet de votre demande * :</label>
+                        <input type="text" id="contact-subject" class="form-control" placeholder="Ex: Demande de renseignement sur l'abonnement VIP" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Votre Message / Préoccupation * :</label>
+                        <textarea id="contact-message" class="form-control" rows="4" placeholder="Saisissez ici les détails de votre message..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-gold btn-block"><i class="fa-solid fa-paper-plane"></i> Envoyer Mon Message</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- ==================== 6. MEMBER DASHBOARD VIEW ==================== -->
+        <section id="view-member-dashboard" class="page-view">
+            <div class="section-header">
+                <div class="section-title-wrap">
+                    <h2><i class="fa-solid fa-user-circle text-gold"></i> Espace Personnel Membre</h2>
+                    <p>Bienvenue sur votre espace réservé, <strong id="dash-user-name" class="text-gold">Membre VIP</strong>.</p>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="sidebar-menu">
+                    <div class="menu-item active"><i class="fa-solid fa-bookmark text-gold"></i> Mes Pronostics Favoris</div>
+                    <div class="menu-item" onclick="showToast('Fonctionnalité d\'alertes push active !', 'info')"><i class="fa-solid fa-bell text-emerald"></i> Notifications VIP</div>
+                    <div class="menu-item" onclick="logout()"><i class="fa-solid fa-arrow-right-from-bracket text-danger"></i> Se Déconnecter</div>
+                </div>
+
+                <div>
+                    <h3 style="font-size:1.2rem; font-weight:800; margin-bottom:1rem;" class="gold-gradient-text">Mes Courses & Pronostics Favoris</h3>
+                    <div class="races-grid" id="member-bookmarks-list">
+                        <!-- Populated dynamically via script.js -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 7. ADMIN DASHBOARD VIEW (BACK-OFFICE) ==================== -->
+        <section id="view-admin-dashboard" class="page-view">
+            <div class="section-header">
+                <div class="section-title-wrap">
+                    <h2><i class="fa-solid fa-screwdriver-wrench text-gold"></i> Back-Office Administration TurfElite</h2>
+                    <p>Gestion intégrale de la plateforme, des pronostics, résultats et paramètres.</p>
+                </div>
+            </div>
+
+            <div class="admin-tabs">
+                <button class="admin-tab-btn active" onclick="switchAdminTab('races')"><i class="fa-solid fa-horse"></i> Gestion Pronostics</button>
+                <button class="admin-tab-btn" onclick="switchAdminTab('results')"><i class="fa-solid fa-trophy"></i> Saisie Résultats</button>
+                <button class="admin-tab-btn" onclick="switchAdminTab('vip-codes')"><i class="fa-solid fa-key"></i> Gestion Codes VIP</button>
+                <button class="admin-tab-btn" onclick="switchAdminTab('users')"><i class="fa-solid fa-users"></i> Membres</button>
+                <button class="admin-tab-btn" onclick="switchAdminTab('settings')"><i class="fa-solid fa-sliders"></i> Paramètres WhatsApp & Contact</button>
+            </div>
+
+            <!-- Tab 1: Races & Predictions & Daily Numbers Publishing -->
+            <div id="admin-tab-races" class="admin-tab-content">
+                <div class="glass-panel" style="margin-bottom:1.5rem;">
+                    <h3 style="font-size:1.1rem; font-weight:800; margin-bottom:1rem;" class="gold-gradient-text">
+                        <i class="fa-solid fa-calendar-day"></i> Publier les Numéros de Départ du Jour & Favoris/VIP 100%
+                    </h3>
+                    <form onsubmit="handleAdminPublishDailyRace(event)">
+                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:1rem; margin-bottom:1rem;">
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>Prix / Intitulé Course * :</label>
+                                <input type="text" id="admin-daily-prix" class="form-control" placeholder="Ex: Prix d'Amérique" required>
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>Hippodrome * :</label>
+                                <input type="text" id="admin-daily-hippodrome" class="form-control" placeholder="Ex: Vincennes" required>
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>Numéro Départ (Ex: R1C4) * :</label>
+                                <input type="text" id="admin-daily-num" class="form-control" placeholder="R1C4" required>
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>Discipline * :</label>
+                                <select id="admin-daily-discipline" class="form-control">
+                                    <option value="Attelé">Attelé</option>
+                                    <option value="Galop">Galop</option>
+                                    <option value="Haies">Haies</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:1rem; margin-bottom:1rem;">
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>Favori Simple Public (Ex: 4 - Idao) * :</label>
+                                <input type="text" id="admin-daily-favori" class="form-control" placeholder="4 - Nom Cheval" required>
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>Pronostic VIP 100% Fiable (Quinté) * :</label>
+                                <input type="text" id="admin-daily-quinte" class="form-control" placeholder="4 - 7 - 12 - 15 - 9" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-gold"><i class="fa-solid fa-paper-plane"></i> Publier le Départ du Jour & Pronostics</button>
+                    </form>
+                </div>
+
+                <div class="results-table-container">
+                    <table class="official-table">
+                        <thead>
+                            <tr>
+                                <th>N°</th>
+                                <th>Prix</th>
+                                <th>Hippodrome / Discipline</th>
+                                <th>Départ</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-races-tbody">
+                            <!-- Populated dynamically via script.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab 2: Results Saisie -->
+            <div id="admin-tab-results" class="admin-tab-content hidden">
+                <div class="results-table-container">
+                    <table class="official-table">
+                        <thead>
+                            <tr>
+                                <th>N°</th>
+                                <th>Prix</th>
+                                <th>Arrivée Officielle</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-results-tbody">
+                            <!-- Populated dynamically via script.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab: VIP Codes Management -->
+            <div id="admin-tab-vip-codes" class="admin-tab-content hidden">
+                <div class="glass-panel" style="margin-bottom:1.5rem;">
+                    <h3 style="font-size:1.1rem; font-weight:800; margin-bottom:1rem;" class="gold-gradient-text"><i class="fa-solid fa-plus-circle"></i> Générer / Publier un Nouveau Code VIP</h3>
+                    <form onsubmit="handleCreateVipCode(event)" style="display:flex; gap:1rem; align-items:flex-end; flex-wrap:wrap;">
+                        <div class="form-group" style="margin-bottom:0; flex:1; min-width:220px;">
+                            <label>Nouveau Code VIP :</label>
+                            <input type="text" id="admin-new-vip-code" class="form-control" placeholder="Ex: EQUI2026" required style="text-transform:uppercase;">
+                        </div>
+                        <button type="submit" class="btn btn-gold"><i class="fa-solid fa-plus"></i> Ajouter Code VIP</button>
+                    </form>
+                </div>
+
+                <div class="results-table-container">
+                    <table class="official-table">
+                        <thead>
+                            <tr>
+                                <th>Code VIP Actif</th>
+                                <th>Statut</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-vip-codes-tbody">
+                            <!-- Populated dynamically via script.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab 3: Users -->
+            <div id="admin-tab-users" class="admin-tab-content hidden">
+                <div class="results-table-container">
+                    <table class="official-table">
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Email</th>
+                                <th>Rôle</th>
+                                <th>Statut</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-users-tbody">
+                            <!-- Populated dynamically via script.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab 4: Settings -->
+            <div id="admin-tab-settings" class="admin-tab-content hidden">
+                <div class="glass-panel" style="max-width:600px;">
+                    <form onsubmit="handleSaveSettings(event)">
+                        <div class="form-group">
+                            <label>Numéro WhatsApp d'Assistance Client :</label>
+                            <input type="text" id="set-whatsapp" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Bannière d'Annonce Supérieure :</label>
+                            <textarea id="set-banner" class="form-control" rows="3" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-gold"><i class="fa-solid fa-floppy-disk"></i> Enregistrer les Paramètres</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- SITE FOOTER WITH SOCIAL LINKS -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <a href="#" class="logo" onclick="switchView('home')" style="margin-bottom:0.75rem;">
+                    <div class="logo-icon-wrap"><i class="fa-solid fa-horse-head"></i></div>
+                    <span>Turf<span class="gold-gradient-text">Elite</span><span class="logo-badge">PRO</span></span>
+                </a>
+                <p class="text-muted" style="font-size:0.85rem; line-height:1.6;">
+                    Plateforme haut de gamme d'information, d'analyse et de pronostics hippiques (PMU).
+                </p>
+            </div>
+
+            <div class="footer-col text-center">
+                <h4 style="font-size:0.95rem; font-weight:800; margin-bottom:1rem;" class="gold-gradient-text">SUIVEZ-NOUS SUR LES RÉSEAUX SOCIAUX</h4>
+                <div class="footer-social-links">
+                    <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="social-btn social-facebook" title="Rejoignez notre page Facebook">
+                        <i class="fa-brands fa-facebook-f"></i>
+                    </a>
+                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="social-btn social-instagram" title="Suivez-nous sur Instagram">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+                    <a href="#" onclick="triggerWhatsAppRedirect(); return false;" class="social-btn social-whatsapp" title="Contactez-nous sur WhatsApp">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer-col text-right">
+                <h4 style="font-size:0.95rem; font-weight:800; margin-bottom:0.5rem;" class="text-gold">CONTACT & ASSISTANCE</h4>
+                <p style="font-size:0.85rem; color:var(--text-muted);">Email : <strong id="footer-contact-email">emmabrn888@gmail.com</strong></p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <span>2026 TurfElite. Tous droits réservés. Nous declinons tous responsabilite en cas de perte.</span>
+        </div>
+    </footer>
+
+    <!-- FLOATING WHATSAPP BUTTON -->
+    <a href="#" class="whatsapp-float-btn" onclick="triggerWhatsAppRedirect()" title="Assistance WhatsApp 24/7">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <!-- MODALS -->
+
+    <!-- Auth Modal -->
+    <div id="modal-auth" class="modal-overlay hidden">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeAuthModal()"><i class="fa-solid fa-xmark"></i></button>
+
+            <!-- Login Wrap -->
+            <div id="auth-login-form-wrap">
+                <h3 style="font-size:1.4rem; font-weight:800; margin-bottom:0.5rem;" class="gold-gradient-text">Espace Connexion VIP</h3>
+                <p class="text-muted" style="font-size:0.88rem; margin-bottom:1.5rem;">Accédez à vos pronostics sauvegardés et alertes.</p>
+
+                <form onsubmit="handleLoginSubmit(event)">
+                    <div class="form-group">
+                        <label>Email Membre :</label>
+                        <input type="email" id="login-email" class="form-control" placeholder="votre.email@domaine.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mot de passe :</label>
+                        <input type="password" id="login-password" class="form-control" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn btn-gold btn-block">Se Connecter</button>
+                    <p style="font-size:0.8rem; text-align:center; margin-top:1rem;" class="text-muted">
+                        Pas de compte ? <a href="#" class="text-gold" onclick="showAuthModal('register')">Inscrivez-vous gratuitement</a>
+                    </p>
+                </form>
+            </div>
+
+            <!-- Register Wrap -->
+            <div id="auth-register-form-wrap" class="hidden">
+                <h3 style="font-size:1.4rem; font-weight:800; margin-bottom:0.5rem;" class="gold-gradient-text">Inscription TurfElite</h3>
+                <p class="text-muted" style="font-size:0.88rem; margin-bottom:1.5rem;">Rejoignez la première communauté hippique premium.</p>
+
+                <form onsubmit="handleRegisterSubmit(event)">
+                    <div class="form-group">
+                        <label>Nom complet :</label>
+                        <input type="text" id="reg-name" class="form-control" placeholder="Ex: Thomas Dupuis" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email :</label>
+                        <input type="email" id="reg-email" class="form-control" placeholder="thomas@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mot de passe :</label>
+                        <input type="password" id="reg-password" class="form-control" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn btn-emerald btn-block">Créer Mon Compte VIP</button>
+                    <p style="font-size:0.8rem; text-align:center; margin-top:1rem;" class="text-muted">
+                        Déjà membre ? <a href="#" class="text-gold" onclick="showAuthModal('login')">Connectez-vous</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIP Code Input Modal -->
+    <div id="modal-vip-code" class="modal-overlay hidden">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeVipCodeModal()"><i class="fa-solid fa-xmark"></i></button>
+            <h3 style="font-size:1.3rem; font-weight:800; margin-bottom:0.5rem;" class="gold-gradient-text"><i class="fa-solid fa-key"></i> Entrer un Code d'Accès VIP</h3>
+            <p class="text-muted" style="font-size:0.88rem; margin-bottom:1.5rem;">Saisissez votre code confidentiel unique transmis par l'administrateur pour déverrouiller tous les pronostics.</p>
+
+            <form onsubmit="handleVipCodeSubmit(event)">
+                <div class="form-group">
+                    <label>Code VIP Confidentiel :</label>
+                    <input type="text" id="input-vip-code" class="form-control" placeholder="Entrez votre code VIP ici..." required style="text-transform:uppercase; font-weight:800; letter-spacing:1px;">
+                </div>
+                <button type="submit" class="btn btn-gold btn-block"><i class="fa-solid fa-unlock"></i> Valider et Déverrouiller</button>
+                <div style="margin-top:1.25rem; text-align:center; font-size:0.85rem;" class="text-muted">
+                    Vous n'avez pas de code ? <a href="#" class="text-emerald" style="font-weight:700;" onclick="closeVipCodeModal(); showVipRequestModal();">Demandez-le sur WhatsApp</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- VIP Request WhatsApp Form Modal -->
+    <div id="modal-vip-request" class="modal-overlay hidden">
+        <div class="modal-card modal-lg">
+            <button class="modal-close" onclick="closeVipRequestModal()"><i class="fa-solid fa-xmark"></i></button>
+            <h3 style="font-size:1.4rem; font-weight:800; margin-bottom:0.5rem;" class="emerald-gradient-text"><i class="fa-brands fa-whatsapp"></i> Formules d'Abonnement VIP & Demande d'Accès</h3>
+            <p class="text-muted" style="font-size:0.88rem; margin-bottom:1.5rem;">Choisissez votre formule et transmettez votre demande pour recevoir vos codes d'accès privilégiés.</p>
+
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:1rem; margin-bottom:1.5rem;">
+                <div class="glass-panel text-center" style="border-color:var(--emerald-bright); padding:1.25rem;">
+                    <span class="badge badge-emerald" style="margin-bottom:0.4rem;">HEBDOMADAIRE</span>
+                    <h4 style="font-size:1.3rem; font-weight:800; margin:0.3rem 0;" class="emerald-gradient-text">25 000 FCFA</h4>
+                    <p style="font-size:0.78rem;" class="text-muted">Accès aux pronostics VIP 7 jours</p>
+                </div>
+                <div class="glass-panel text-center" style="border-color:var(--gold-bright); padding:1.25rem;">
+                    <span class="badge badge-gold" style="margin-bottom:0.4rem;">MENSUEL</span>
+                    <h4 style="font-size:1.3rem; font-weight:800; margin:0.3rem 0;" class="gold-gradient-text">95 000 FCFA</h4>
+                    <p style="font-size:0.78rem;" class="text-muted">Accès complet 30 jours + Tuyaux IA</p>
+                </div>
+                <div class="glass-panel text-center" style="border-color:var(--gold-bright); padding:1.25rem; background: rgba(217, 119, 6, 0.1);">
+                    <span class="badge badge-gold" style="margin-bottom:0.4rem; background:var(--gold-gradient); color:#000;">ANNUEL VIP</span>
+                    <h4 style="font-size:1.3rem; font-weight:800; margin:0.3rem 0;" class="gold-gradient-text">250 000 FCFA</h4>
+                    <p style="font-size:0.78rem;" class="text-muted">Accès Illimité 1 An + Canal WhatsApp Prioritaire</p>
+                </div>
+            </div>
+
+            <form onsubmit="handleVipRequestSubmit(event)">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem;">
+                    <div class="form-group">
+                        <label>Nom complet * :</label>
+                        <input type="text" id="vip-req-name" class="form-control" placeholder="Ex: Marc Laurent" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Adresse Email * :</label>
+                        <input type="email" id="vip-req-email" class="form-control" placeholder="marc@example.com" required>
+                    </div>
+                </div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem;">
+                    <div class="form-group">
+                        <label>Numéro WhatsApp * :</label>
+                        <input type="tel" id="vip-req-phone" class="form-control" placeholder="+226 XX XX XX XX" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Formule d'abonnement * :</label>
+                        <select id="vip-req-formula" class="form-control" required>
+                            <option value="Abonnement Hebdomadaire (25 000 FCFA / 7j)">Abonnement Hebdomadaire (25 000 FCFA)</option>
+                            <option value="Abonnement Mensuel (95 000 FCFA / 30j)" selected>Abonnement Mensuel (95 000 FCFA)</option>
+                            <option value="Abonnement Annuel VIP (250 000 FCFA / 1 an)">Abonnement Annuel VIP (250 000 FCFA)</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-emerald btn-block btn-lg"><i class="fa-brands fa-whatsapp"></i> Envoyer la demande sur WhatsApp</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Race Details / Ticket Modal -->
+    <div id="modal-race-details" class="modal-overlay hidden">
+        <div class="modal-card modal-lg">
+            <button class="modal-close" onclick="closeRaceDetailsModal()"><i class="fa-solid fa-xmark"></i></button>
+            <div id="race-details-modal-content">
+                <!-- Content populated via script.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Media Viewer Modal -->
+    <div id="modal-media-viewer" class="modal-overlay hidden">
+        <div class="modal-card modal-lg">
+            <button class="modal-close" onclick="closeMediaModal()"><i class="fa-solid fa-xmark"></i></button>
+            <div id="media-viewer-content">
+                <!-- Content populated via script.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Cookie Consent Banner -->
+    <div id="cookie-banner" class="cookie-banner hidden">
+        <div class="cookie-content">
+            <i class="fa-solid fa-cookie-bite text-gold" style="font-size:1.8rem;"></i>
+            <div style="flex:1;">
+                <h4 style="margin:0 0 0.3rem 0; font-size:1rem;" class="gold-gradient-text">Gestion des Cookies & Confidentialité</h4>
+                <p style="margin:0; font-size:0.85rem; color:var(--text-muted);">
+                    Nous utilisons des cookies essentiels pour assurer le bon fonctionnement de l'interface, mémoriser vos préférences de thème et personnaliser votre expérience sur TurfElite.
+                </p>
+            </div>
+            <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                <button class="btn btn-outline btn-sm" onclick="handleCookieChoice(false)">Refuser</button>
+                <button class="btn btn-gold btn-sm" onclick="handleCookieChoice(true)">Accepter</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
